@@ -1,4 +1,4 @@
-# Diagnostics project
+# Diagnostics project - Jasmine team
 
 Scripts go in the `scripts` directory.
 
