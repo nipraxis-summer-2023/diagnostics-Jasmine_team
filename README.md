@@ -1,4 +1,4 @@
-# Diagnostics project
+# Diagnostics project - Jasmine team
 
 Giovanna Nordio - August 2023
 
