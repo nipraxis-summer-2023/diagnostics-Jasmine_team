@@ -24,10 +24,13 @@ def file_hash(filename):
     """
     # Open the file, read contents as bytes.
     # Calculate, return SHA1 has on the bytes from the file.
-    # This is a placeholder, replace it to write your solution.
-    raise NotImplementedError(
-        'This is just a template -- you are expected to code this.')
-
+    filename = Path(filename)
+    # Assert the file exists, if not raise an error
+    if not filename.exists():
+        raise FileExistsError(f'File {filename} does not exist')
+    # Read the file as bytes and return SHA1 hash
+    return hashlib.sha1(filename.read_bytes()).hexdigest()
+    
 
 def validate_data(data_directory):
     """ Read ``data_hashes.txt`` file in `data_directory`, check hashes
@@ -52,9 +55,23 @@ def validate_data(data_directory):
     # Calculate actual hash for given filename.
     # If hash for filename is not the same as the one in the file, raise
     # ValueError
-    # This is a placeholder, replace it to write your solution.
-    raise NotImplementedError('This is just a template -- you are expected to code this.')
-
+    data_directory = Path(data_directory)
+    if not data_directory.exists():
+        raise FileExistsError(f'Directory {data_directory} does not exist')
+    if not data_directory.is_dir():
+        raise NotADirectoryError(f'{data_directory} is not a directory')
+    # Read the data_hashes.txt file
+    data_hashes = data_directory / 'data_hashes.txt'
+    if not data_hashes.exists():
+        raise FileExistsError(f'{data_hashes} does not exist')
+    # Loop through the lines of the data_hashes.txt file. The file contents are composed as:
+    # hash1 filename. Split and use the file_hash function to calculate the hash of the filename.
+    for line in data_hashes.read_text().splitlines():
+        hash1, filename = line.split()
+        hash2 = file_hash(data_directory / filename)
+        if hash1 != hash2:
+            raise ValueError(f'Hash mismatch for {filename}: '
+                             f'{hash1} != {hash2}')
 
 def main():
     # This function (main) called when this file run as a script.
