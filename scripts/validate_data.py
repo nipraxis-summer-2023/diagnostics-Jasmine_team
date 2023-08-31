@@ -2,7 +2,7 @@
 
 Run as:
 
-    python3 scripts/validata_data.py data
+    python3 scripts/validate_data.py data
 """
 
 from pathlib import Path
