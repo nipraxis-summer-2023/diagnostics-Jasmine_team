@@ -62,3 +62,6 @@ data/sub-03/func/sub-03_task-taskzero_run-02_bold.nii.gz, 101, 102, 132
 data/sub-08/func/sub-08_task-taskzero_run-01_bold.nii.gz, 0, 1, 2, 166, 167
 data/sub-09/func/sub-08_task-taskzero_run-01_bold.nii.gz, 3
 ```
+
+## Script usage
+
