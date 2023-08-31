@@ -8,6 +8,15 @@ Run as:
 from pathlib import Path
 import sys
 import hashlib
+import logging
+
+# Create and set up logger
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+handler = logging.StreamHandler()
+formatter = logging.Formatter('%(asctime)s | %(levelname)s | %(message)s')
+handler.setFormatter(formatter)
+logger.addHandler(handler)
 
 def file_hash(filename: str) -> str:
     """ Get byte contents of file `filename`, return SHA1 hash
@@ -27,6 +36,7 @@ def file_hash(filename: str) -> str:
     filename = Path(filename)
     # Assert the file exists, if not raise an error
     if not filename.exists():
+        logger.error(f'File {filename} does not exist')
         raise FileExistsError(f'File {filename} does not exist')
     # Read the file as bytes and return SHA1 hash
     return hashlib.sha1(filename.read_bytes()).hexdigest()
@@ -57,13 +67,15 @@ def validate_data(data_directory: str) -> None:
     # ValueError
     data_directory = Path(data_directory)
     if not data_directory.exists():
+        logger.error(f'Directory {data_directory} does not exist')
         raise FileExistsError(f'Directory {data_directory} does not exist')
     if not data_directory.is_dir():
+        logger.error(f'{data_directory} is not a directory')
         raise NotADirectoryError(f'{data_directory} is not a directory')
     # Read the data_hashes.txt file
     data_hashes = next(data_directory.rglob('group-*/hash_list.txt'), None)
-    print(data_hashes)
     if not data_hashes.exists():
+        logger.error(f'{data_hashes} does not exist')
         raise FileExistsError(f'{data_hashes} does not exist')
     # Loop through the lines of the data_hashes.txt file. The file contents are composed as:
     # hash1 filename. Split and use the file_hash function to calculate the hash of the filename.
@@ -71,10 +83,13 @@ def validate_data(data_directory: str) -> None:
         hash1, filename = line.split()
         hash2 = file_hash(data_directory / filename)
         if hash1 != hash2:
+            logger.warning(f'Hash mismatch for {filename}: '
+                           f'{hash1} != {hash2}')
             raise ValueError(f'Hash mismatch for {filename}: '
                              f'{hash1} != {hash2}')                     
         else:
-            print(f'Hash match for {filename}: {hash1} == {hash2}')
+            logger.info(f'Hash match for {filename}') 
+            logger.debug(f'hash (sha1) = {hash1}')
     return
 
 
@@ -83,6 +98,8 @@ def main():
     #
     # Get the data directory from the command line arguments
     if len(sys.argv) < 2:
+        logger.error("Please give data directory on "
+                     "command line")
         raise RuntimeError("Please give data directory on "
                            "command line")
     data_directory = sys.argv[1]
