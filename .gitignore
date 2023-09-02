@@ -1,2 +1,5 @@
 *.pyc
 __pycache__/
+
+# Ignore files from macOS
+.DS_Store
