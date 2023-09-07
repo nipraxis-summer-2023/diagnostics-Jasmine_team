@@ -1,6 +1,7 @@
 # Diagnostics project - Jasmine team
 
 Giovanna Nordio - August 2023
+Rubaida Easmin - September 2023
 
 Scripts go in the `scripts` directory.
 
