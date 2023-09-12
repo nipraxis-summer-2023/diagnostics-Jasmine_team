@@ -3,6 +3,8 @@
 
 # Any imports you need
 # +++your code here+++
+import numpy as np
+import nibabel as nib
 
 
 def dvars(img):
@@ -25,8 +27,12 @@ def dvars(img):
     # In [2]: arr = np.array([[2, 3, 4], [5, 6, 7]])
     # In [3]: np.mean(arr, axis=1)
     # Out[2]: array([3., 6.])
-    #
-    # You may be be able to solve this in four lines, without a loop.
-    # But solve it any way you can.
-    # This is a placeholder, replace it to write your solution.
-    raise NotImplementedError('Code up this function')
+
+    img_data = img.get_fdata()
+    n_voxels = np.prod(img_data.shape[:-1])
+    img_data_reshaped = np.reshape(img_data, (n_voxels, img_data.shape[-1]))
+    vol_diff = np.diff(img_data_reshaped, axis=1)
+
+    return np.sqrt(np.mean(vol_diff ** 2, axis=0))
+
+    # raise NotImplementedError('Code up this function')
