@@ -5,10 +5,12 @@ Run as:
     python3 scripts/validate_data.py data
 """
 
-from pathlib import Path
 import sys
 import hashlib
 import logging
+import os
+import glob
+from pathlib import Path
 
 from findoutlie.utils import validate_data
 
@@ -19,8 +21,6 @@ handler = logging.StreamHandler()
 formatter = logging.Formatter('%(levelname)s | %(asctime)s | %(message)s')
 handler.setFormatter(formatter)
 logger.addHandler(handler)
-
-
 
 
 def main():
