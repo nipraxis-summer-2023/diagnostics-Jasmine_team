@@ -43,6 +43,7 @@ def test_iqr_detector():
     assert np.all(example_values[is_outlier] == [10.2, 15.9, 16.4])
     # Test not-default value for outlier proportion
     is_outlier = iqr_detector(example_values, 0.5)
+    print(example_values[is_outlier])
     assert np.all(example_values[is_outlier] == [10.2, 14.1, 15.1, 15.9, 16.4])
 
 
