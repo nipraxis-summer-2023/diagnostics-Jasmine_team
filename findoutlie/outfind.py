@@ -26,7 +26,7 @@ def detect_outliers(fname):
 
         # Prepare the data for PCA
         df_data = pd.DataFrame(img_data_reshaped)
-        feat_cols = ['Slice_' + str(i) for i in range(df_data.shape[1])]
+        feat_cols = [f'Slice_{i}' for i in range(df_data.shape[1])]
 
         # Standardize the data
         x = df_data.loc[:, :].values
@@ -36,7 +36,7 @@ def detect_outliers(fname):
         pca = PCA(n_components=2)
         principalComponents = pca.fit_transform(x)
         principal_Df = pd.DataFrame(data=principalComponents,
-                                    columns=['principal component 1', 'principal component 2'])
+                                    columns=['PC1', 'PC2'])
         variance[i] = pca.explained_variance_ratio_[0]
 
     variance = variance.tolist()
@@ -44,8 +44,7 @@ def detect_outliers(fname):
     variance_std = np.std(variance, axis=0)
 
     # Find variance_outliers using mean and standard deviation
-    variance_outliers = [variance_volume for variance_volume in variance if (variance_volume < variance_mean - 2 * variance_std)]
-    variance_outliers = [variance_volume for variance_volume in variance if (variance_volume > variance_mean + 2 * variance_std)]
+    variance_outliers = [variance_volume for variance_volume in variance if (np.abs(variance_volume) > variance_mean + 2 * variance_std)]
     volume_outliers = [variance.index(i) for i in variance_outliers]
 
     return volume_outliers
@@ -67,7 +66,7 @@ def find_outliers(data_directory):
     """
     image_fnames = Path(data_directory).glob('**/sub-*.nii.gz')
     outlier_dict = {}
-    for fname in image_fnames:
+    for fname in sorted(image_fnames):
         outliers = detect_outliers(fname)
         outlier_dict[str(fname)] = outliers
     return outlier_dict
